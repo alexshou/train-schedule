@@ -41,21 +41,7 @@
                 <th>Minutes away</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td> NYC line </td>
-                <td>New York City</td>
-                <td>20</td>
-                <td>10:00</td>
-                <td>10</td>
-              </tr>
-              <tr>
-                <td> DC line </td>
-                <td>Washington DC</td>
-                <td>30</td>
-                <td>11:00</td>
-                <td>12</td>
-              </tr>
+            <tbody id = "train-table">
             </tbody>
           </table>
           </div>
@@ -82,7 +68,7 @@
               </div>
               <div class="form-group">
                 <label for="first-input">First Train Time (HH:mm, military time):</label>
-                <input class="form-control" id="first-input" type="time">
+                <input class="form-control" id="first-input" type="military-time">
               </div>
               <div class="form-group">
                 <label for="freq-input">Frequency (min)</label>

@@ -10,9 +10,6 @@ var config = {
   firebase.initializeApp(config);
   var database = firebase.database();
 
-  var dt = new Date();
-  var time = dt.getHours() + ":" + dt.getMinutes();
-  console.log(time);
   $("#add-train").on("click", function() {
       // Don't refresh the page!
     event.preventDefault();
@@ -20,10 +17,7 @@ var config = {
     var trainDes = $("#des-input").val().trim();
     var firstTrainTime = $("#first-input").val().trim();
     var trainFreq = $("#freq-input").val().trim();
-    var firstTrainHours = firstTrainTime[0]+firstTrainTime[1];
-    var firstTrainMinutes = firstTrainTime[3]+firstTrainTime[4];
-    var minutesToNextTrain = (dt.gethours)()
-
+    
     database.ref().push({
       name: trainName,
       trainDestination: trainDes,
@@ -38,32 +32,41 @@ var config = {
 
     // storing the snapshot.val() in a variable for convenience
     var sv = snapshot.val();
-
+    var dt = new Date();
+    var time = dt.getHours() + ":" + dt.getMinutes();
+    console.log(time);
+    $("#train-table").empty();
     for( var key in sv ){
       var thisObject = sv[key];
-      console.log(thisObject);
+      var firstTrainHours = thisObject.firstTrainTime[0] + thisObject.firstTrainTime[1];
+      var firstTrainMinutes = thisObject.firstTrainTime[3] + thisObject.firstTrainTime[4];
+      var minutesToNextTrain = thisObject.trainFrequency - ((dt.getHours() - firstTrainHours)*60 + 
+        (dt.getMinutes() - firstTrainMinutes)) % thisObject.trainFrequency; 
+      var nextTrainArrival;
+      var nextTrainHours;
+      var nextTrainMinutes;
+      if((minutesToNextTrain + dt.getMinutes()) >= 60){
+        nextTrainHours = dt.getHours() + 1;
+        nextTrainMinutes = dt.getMinutes() + minutesToNextTrain - 60;
+      }
+      else
+      {
+        nextTrainHours = dt.getHours();
+        nextTrainMinutes = dt.getMinutes() + minutesToNextTrain;
+      }
+      if(nextTrainHours === 0){
+          nextTrainHours = "00";
+      }
+      if(nextTrainMinutes === 0){
+        nextTrainMinutes = "00";
+      }
+      nextTrainArrival = nextTrainHours + ":" + nextTrainMinutes;
+
+      console.log("next train:" + nextTrainArrival);
+        $(".table").append("<tr><td>" + thisObject.name + "</td><td>" + thisObject.trainDestination + 
+        "</td><td>" + thisObject.trainFrequency + "</td><td>" + nextTrainArrival + 
+        "</td><td>" + minutesToNextTrain + "</td></tr>");
     }
-
-    // Getting an array of each key In the snapshot object
-    var svArr = Object.keys(sv);
-
-    // Finding the last user's key
-    var lastIndex = svArr.length - 1;
-
-    var lastKey = svArr[lastIndex];
-
-    // Using the last user's key to access the last added user object
-    var lastObj = sv[lastKey];
-
-    // Console.loging the last user's data
-    console.log(lastObj.name);
-    console.log(lastObj.trainDestination);
-    console.log(lastObj.firstTrainTime);
-    console.log(lastObj.trainFrequency);
-
-    $(".table").append("<tr><td>" + lastObj.name + "</td><td>" + lastObj.trainDestination + 
-      "</td><td>" + lastObj.trainFrequency + "</td><td>" + lastObj.firstTrainTime + "</td></tr>");
-
     // Handle the errors
   }, function(errorObject) {
     console.log("Errors handled: " + errorObject.code);
