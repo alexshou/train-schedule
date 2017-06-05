@@ -46,13 +46,15 @@ var config = {
       var nextTrainHours;
       var nextTrainMinutes;
       if((minutesToNextTrain + dt.getMinutes()) >= 60){
-        nextTrainHours = dt.getHours() + 1;
-        nextTrainMinutes = dt.getMinutes() + minutesToNextTrain - 60;
+        var totalMins = minutesToNextTrain + dt.getMinutes();
+        nextTrainHours = (dt.getHours() + parseInt(totalMins/60)) % 24;
+        nextTrainMinutes = totalMins % 60;
       }
       else
       {
-        nextTrainHours = dt.getHours();
-        nextTrainMinutes = dt.getMinutes() + minutesToNextTrain;
+        var totalMins = minutesToNextTrain + dt.getMinutes();
+        nextTrainHours = dt.getHours() % 24;
+        nextTrainMinutes = totalMins;
       }
       if(nextTrainHours === 0){
           nextTrainHours = "00";
@@ -60,6 +62,7 @@ var config = {
       if(nextTrainMinutes === 0){
         nextTrainMinutes = "00";
       }
+      if(nextTrainHours)
       nextTrainArrival = nextTrainHours + ":" + nextTrainMinutes;
 
       console.log("next train:" + nextTrainArrival);
