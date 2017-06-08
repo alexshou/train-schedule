@@ -68,7 +68,7 @@ var config = {
       console.log("next train:" + nextTrainArrival);
         $(".table").append("<tr><td>" + thisObject.name + "</td><td>" + thisObject.trainDestination + 
         "</td><td>" + thisObject.trainFrequency + "</td><td>" + nextTrainArrival + 
-        "</td><td>" + minutesToNextTrain + "</td></tr>");
+        "</td><td>" + minutesToNextTrain +  "</td></tr>");
     }
     // Handle the errors
   }, function(errorObject) {
